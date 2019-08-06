@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>{$title}</title>
+    <link rel="stylesheet" type="text/css" href="__CSS__/base.css" />
+    <link rel="stylesheet" type="text/css" href="__CSS__/icon.css" />
+    <link rel="stylesheet" type="text/css" href="__CSS__/index.css" />
+    <link rel="icon" href="__ROOT__/static/img/nuoya.png" type="image/x-icon">
+    <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.js"></script>
+    <script src="__JS__/rem.js"></script>
+</head>
+<body>
+    <div class="Group">
+        <div class="header">
+            <span>首页</span>
+            <i class="header_left iconfont icon-shouye "></i>
+            <i class="header_right iconfont icon-touxiang" id="user_menu"></i>
+        </div>
+        <div class="main">
+            <div class="box">
+                <div class="box_top">
+                    <span>限时团购</span>
+                    <div>
+                        <span class="time_day">5天</span>
+                        <span class="time_h">10</span><i>:</i>
+                        <span class="time_s">2</span><i>:</i>
+                        <span class="time_m">46</span>
+                    </div>
+                </div>
+                <input type="hidden" id="end_time" value="{$endtime}">
+                <div class="box_centen">
+                    {volist name="proB" id="vo"}
+                    <a href="{:url('web/Product/groupShopDet',['id'=>$vo.P_id])}">
+                        <div>
+                            <img src="__ROOT__/{$vo.P_Pic}" alt="">
+                            <p>{$vo.P_Title}</p>
+                            <div>
+                                <span>￥{$vo.P_Price2}</span>
+                                <span>原:<s>{$vo.P_Price1}</s></span>
+                            </div>
+                        </div>
+                    </a>
+                    {/volist}
+                </div>
+                <div class="lien"><span>团购留言</span></div>
+
+                <ul class="box_centen_list">
+
+                    {volist name="bbsC" id="vo"}
+                    <li>
+                        <img src="{$vo.U_WXimg}" alt="">
+                        <div class="box_centen_list_box">
+                            <div>
+                                <span style="color: #949494">{$vo.U_WXname}</span>
+                                <span>{$vo.ctime|date='n-d H:i',###}</span>
+                            </div>
+                            <p>　{$vo.B_content}</p>
+                        </div>
+                    </li>
+                    {/volist}
+                </ul>
+
+            </div>
+            <div class="box">
+                <div class="box_top">
+                    <span>最新活动</span>
+                </div>
+                {volist name="proC" id="vo"}
+                <a href="{:url('web/Product/activityDet',['id'=>$vo.P_id])}">
+                    <div class="box_top_active">
+                        <img src="__ROOT__/{$vo.P_Pic}" alt="">
+                        <p>{$vo.P_Describe}</p>
+                        <div class="btn">
+                            <button>立即报名</button>
+                        </div>
+                    </div>
+                </a>
+                {/volist}
+            </div>
+            <div class="box">
+                <div class="box_top">
+                    <span>推荐礼品卡</span>
+                </div>
+                {volist name="proA" id="vo"}
+                <a href="{:url('web/Product/cardDet',['id'=>$vo.P_id])}">
+                    <div class="box_top_gift">
+                        <img src="__ROOT__/{$vo.P_Pic}" alt="">
+                        <div>
+                            <span>{$vo.P_Title}</span>
+                            <p>{$vo.P_Label}</p>
+                            <div>￥{$vo.P_Price2}</div>
+                        </div>
+                    </div>
+                </a>
+                {/volist}
+            </div>
+        </div>
+
+    </div>
+
+
+</body>
+<script type="text/javascript" language="javascript">
+    var time_day = $('.time_day');
+    var time_h = $('.time_h');
+    var time_s = $('.time_s');
+    var time_m = $('.time_m');
+    var countdown = function () {
+        var reg = /^\d{2}$/;
+        var end_time = $('#end_time').val();
+        end_time = end_time.replace(/\-/g, "/");
+        new Date(end_time);
+        var ending = new Date(end_time);
+        var now = new Date;
+        if (now >= ending) {
+            clearTimeout(this.timeout);
+            console.log("时间已到");
+            return;
+        }
+        var disc = ending - now;
+        var day = parseInt(disc / 1000 / 60 / 60 / 24);
+        var hour = parseInt(disc / 1000 / 60 / 60 % 24);
+        hour = !reg.test(hour) ? "0" + hour : hour;
+        var minute = parseInt(disc / 1000 / 60 % 60);
+        minute = !reg.test(minute) ? "0" + minute : minute;
+        var second = parseInt(disc / 1000 % 60);
+        second = !reg.test(second) ? "0" + second : second;
+        if (time_day.html().slice(0, -1) != day) {
+            time_day.html(day + "天");
+        }
+        if (time_h.html() != hour) {
+            time_h.html(hour);
+        }
+        if (time_s.html() != minute) {
+            time_s.html(minute);
+        }
+        if (time_m.html() != second) {
+            time_m.html(second);
+        }
+        this.timeout = setTimeout(countdown, 1000);
+    };
+
+    onload = countdown;
+</script>
+<script>
+    // $('body').append("<div class='md-popup-box'><div class='isAlert'>Hello</div></div>");
+    $('.Group').append("<div class='md-popup-box'><div class='isAlert'>Hello</div></div>");
+
+    $(function () {
+        $('#user_menu').click(function () {
+            window.location.href = "{:url('web/Personal/index')}";
+        });
+    });
+
+    $('.back').click(function () {
+        window.history.back(-1);
+    });
+
+</script>
+
+</html>
